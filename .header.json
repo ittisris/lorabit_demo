@@ -1,0 +1,16 @@
+{
+    "target": "microbit",
+    "targetVersion": "1.2.19",
+    "editor": "blocksprj",
+    "name": "lorabit_demo",
+    "meta": {},
+    "pubId": "",
+    "pubCurrent": false,
+    "id": "2768a5a1-800b-47fe-1377-2686a4621d8c",
+    "recentUse": 1555855359,
+    "modificationTime": 1555855359,
+    "path": "lorabit-i2c",
+    "blobCurrent": false,
+    "saveId": null,
+    "githubCurrent": false
+}

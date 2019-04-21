@@ -1,0 +1,19 @@
+{
+    "name": "lorabit_demo",
+    "dependencies": {
+        "core": "*",
+        "radio": "*",
+        "BME280": "github:makecode-extensions/bme280#7d4303b3b529e21d39f6363b013a0ca5b87a7fb7"
+    },
+    "description": "",
+    "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md",
+        "custom.ts"
+    ],
+    "targetVersions": {
+        "target": "1.2.19",
+        "pxt": "5.5.13"
+    }
+}

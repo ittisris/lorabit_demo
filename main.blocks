@@ -1,0 +1,361 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable type="" id="LgptD-3WqpAwb0cLxD(1">item</variable>
+    <variable type="" id="FfUVqGe1;I~~HlSK{$,J">count</variable>
+  </variables>
+  <block type="pxt-on-start" x="0" y="5">
+    <statement name="HANDLER">
+      <block type="device_set_brightness">
+        <value name="value">
+          <shadow type="math_number_minmax">
+            <mutation min="0" max="255" label="Value"></mutation>
+            <field name="SLIDER">10</field>
+          </shadow>
+        </value>
+        <next>
+          <block type="device_print_message">
+            <value name="text">
+              <shadow type="text">
+                <field name="TEXT">loraBit demo</field>
+              </shadow>
+            </value>
+            <next>
+              <block type="BME280_SET_ADDRESS">
+                <field name="addr">BME280_I2C_ADDRESS.ADDR_0x76</field>
+                <next>
+                  <block type="cayenneLPP_register_digital">
+                    <field name="dir">LPP_Direction.Output_Port</field>
+                    <field name="pin">DigitalPin.P1</field>
+                    <next>
+                      <block type="cayenneLPP_register_sensor">
+                        <field name="sensor">LPP_Bit_Sensor.LED_Brightness</field>
+                        <next>
+                          <block type="device_clear_display"></block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="loraBit_whenReceived" x="423" y="12">
+    <statement name="HANDLER">
+      <block type="cayenneLPP_lpp_update">
+        <value name="payload">
+          <shadow type="text" id="|!2${Ths+Q8]8*LBVPBa">
+            <field name="TEXT"></field>
+          </shadow>
+          <block type="loraBit_getReceivedPayload"></block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="device_button_event" x="930" y="5">
+    <field name="NAME">Button.B</field>
+    <statement name="HANDLER">
+      <block type="LoraBit_reset">
+        <next>
+          <block type="loraBit_param_Config">
+            <field name="ADR">loraBit_ADR.On</field>
+            <value name="Datarate">
+              <shadow type="math_number_minmax">
+                <mutation min="0" max="6" label="Datarate"></mutation>
+                <field name="SLIDER">2</field>
+              </shadow>
+            </value>
+            <value name="Retrans">
+              <shadow type="math_number_minmax">
+                <mutation min="0" max="7" label="Retrans"></mutation>
+                <field name="SLIDER">1</field>
+              </shadow>
+            </value>
+            <next>
+              <block type="loraBit_param_OTAA">
+                <value name="DevEUI">
+                  <shadow type="text">
+                    <field name="TEXT">00F8361A0B832941</field>
+                  </shadow>
+                </value>
+                <value name="AppEUI">
+                  <shadow type="text">
+                    <field name="TEXT">70B3D57ED0018FB9</field>
+                  </shadow>
+                </value>
+                <value name="AppKey">
+                  <shadow type="text">
+                    <field name="TEXT">757E83314D84675319AAE1DC76536075</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block type="loraBit_join"></block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="device_button_event" x="1365" y="0">
+    <field name="NAME">Button.A</field>
+    <statement name="HANDLER">
+      <block type="LoraBit_reset">
+        <next>
+          <block type="loraBit_param_Config">
+            <field name="ADR">loraBit_ADR.On</field>
+            <value name="Datarate">
+              <shadow type="math_number_minmax">
+                <mutation min="0" max="6" label="Datarate"></mutation>
+                <field name="SLIDER">2</field>
+              </shadow>
+            </value>
+            <value name="Retrans">
+              <shadow type="math_number_minmax">
+                <mutation min="0" max="7" label="Retrans"></mutation>
+                <field name="SLIDER">5</field>
+              </shadow>
+            </value>
+            <next>
+              <block type="loraBit_param_ABP">
+                <value name="DevAddr">
+                  <shadow type="text">
+                    <field name="TEXT">26041239</field>
+                  </shadow>
+                </value>
+                <value name="NwkSKey">
+                  <shadow type="text">
+                    <field name="TEXT">ED8364C28F8D93E3693903531480121A</field>
+                  </shadow>
+                </value>
+                <value name="AppSKey">
+                  <shadow type="text">
+                    <field name="TEXT">F0E832C43FAD48299CCC9F765254B72A</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block type="loraBit_join"></block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="device_button_event" x="2215" y="5">
+    <field name="NAME">Button.AB</field>
+    <statement name="HANDLER">
+      <block type="LoraBit_reset">
+        <next>
+          <block type="loraBit_param_Config">
+            <field name="ADR">loraBit_ADR.On</field>
+            <value name="Datarate">
+              <shadow type="math_number_minmax">
+                <mutation min="0" max="6" label="Datarate"></mutation>
+                <field name="SLIDER">2</field>
+              </shadow>
+            </value>
+            <value name="Retrans">
+              <shadow type="math_number_minmax">
+                <mutation min="0" max="7" label="Retrans"></mutation>
+                <field name="SLIDER">1</field>
+              </shadow>
+            </value>
+            <next>
+              <block type="loraBit_param_OTAA">
+                <value name="DevEUI">
+                  <shadow type="text">
+                    <field name="TEXT">343137326436900F</field>
+                  </shadow>
+                </value>
+                <value name="AppEUI">
+                  <shadow type="text">
+                    <field name="TEXT">70B3D57ED0007650</field>
+                  </shadow>
+                </value>
+                <value name="AppKey">
+                  <shadow type="text">
+                    <field name="TEXT">723BFEED40D7E244B21343889947F457</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block type="loraBit_join"></block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="device_forever" x="421" y="183">
+    <statement name="HANDLER">
+      <block type="device_pause">
+        <value name="pause">
+          <shadow type="timePicker">
+            <field name="ms">5000</field>
+          </shadow>
+        </value>
+        <next>
+          <block type="procedures_callnoreturn">
+            <mutation name="sendData"></mutation>
+            <field name="NAME">sendData</field>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" x="0" y="457">
+    <field name="NAME">sendData</field>
+    <field name="PARAMS"></field>
+    <statement name="STACK">
+      <block type="BME280_POWER_ON">
+        <next>
+          <block type="device_pause">
+            <value name="pause">
+              <shadow type="timePicker">
+                <field name="ms">5000</field>
+              </shadow>
+            </value>
+            <next>
+              <block type="device_scroll_image">
+                <value name="sprite">
+                  <block type="device_build_image">
+                    <field name="LEDS">`
+        . . . . # 
+        . . . . # 
+        . . . # # 
+        . . # # # 
+        # # # # #
+        `
+                    </field>
+                  </block>
+                </value>
+                <value name="frameoffset">
+                  <shadow type="math_number">
+                    <field name="NUM">1</field>
+                  </shadow>
+                </value>
+                <value name="delay">
+                  <shadow type="math_number">
+                    <field name="NUM">20</field>
+                  </shadow>
+                </value>
+                <next>
+                  <block type="loraBit_sendPacket">
+                    <field name="confirmed">loraBit_Confirmed.Uncomfirmed</field>
+                    <value name="port">
+                      <shadow type="math_number_minmax">
+                        <mutation min="1" max="255" label="Port"></mutation>
+                        <field name="SLIDER">1</field>
+                      </shadow>
+                    </value>
+                    <value name="payload">
+                      <shadow type="text" id="A4~v_hbjzRZg[y7b`2t5">
+                        <field name="TEXT"></field>
+                      </shadow>
+                      <block type="text_join">
+                        <mutation items="4"></mutation>
+                        <value name="ADD0">
+                          <shadow type="text" id="[4fR1av!Fdn(b9)x^ez!">
+                            <field name="TEXT">Hello</field>
+                          </shadow>
+                          <block type="cayenneLPP_lpp_upload"></block>
+                        </value>
+                        <value name="ADD1">
+                          <shadow type="text" id="[TyOM.`WC}*lf;x--uXX">
+                            <field name="TEXT">World</field>
+                          </shadow>
+                          <block type="cayenneLPP_lpp">
+                            <field name="llpType">LPP_DATA_TYPE.Temperature</field>
+                            <value name="channel">
+                              <shadow type="math_number_minmax">
+                                <mutation min="1" max="255" label="Channel"></mutation>
+                                <field name="SLIDER">76</field>
+                              </shadow>
+                            </value>
+                            <value name="value">
+                              <shadow type="math_number" id="O2%$C4WvM}l%.7^X~DY;">
+                                <field name="NUM">0</field>
+                              </shadow>
+                              <block type="BME280_GET_TEMPERATURE"></block>
+                            </value>
+                          </block>
+                        </value>
+                        <value name="ADD2">
+                          <shadow type="text" id="4FTpz0j~Eo[/6bT?dF~;">
+                            <field name="TEXT"></field>
+                          </shadow>
+                          <block type="cayenneLPP_lpp">
+                            <field name="llpType">LPP_DATA_TYPE.Humidity</field>
+                            <value name="channel">
+                              <shadow type="math_number_minmax">
+                                <mutation min="1" max="255" label="Channel"></mutation>
+                                <field name="SLIDER">77</field>
+                              </shadow>
+                            </value>
+                            <value name="value">
+                              <shadow type="math_number" id="zyZLRSnB`nh0V(~j1F=u">
+                                <field name="NUM">0</field>
+                              </shadow>
+                              <block type="BME280_GET_HUMIDITY"></block>
+                            </value>
+                          </block>
+                        </value>
+                        <value name="ADD3">
+                          <shadow type="text" id="N*I8S3`(YPC=m;p#PQRL">
+                            <field name="TEXT"></field>
+                          </shadow>
+                          <block type="cayenneLPP_lpp">
+                            <field name="llpType">LPP_DATA_TYPE.Pressure</field>
+                            <value name="channel">
+                              <shadow type="math_number_minmax">
+                                <mutation min="1" max="255" label="Channel"></mutation>
+                                <field name="SLIDER">78</field>
+                              </shadow>
+                            </value>
+                            <value name="value">
+                              <shadow type="math_number" id="kw`;W2zd_Kdq@E(;50|`">
+                                <field name="NUM">0</field>
+                              </shadow>
+                              <block type="math_arithmetic">
+                                <field name="OP">DIVIDE</field>
+                                <value name="A">
+                                  <shadow type="math_number" id="rY,F}uHfnG1a_mlqIU7G">
+                                    <field name="NUM">0</field>
+                                  </shadow>
+                                  <block type="BME280_GET_PRESSURE"></block>
+                                </value>
+                                <value name="B">
+                                  <shadow type="math_number">
+                                    <field name="NUM">100</field>
+                                  </shadow>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="BME280_POWER_OFF">
+                        <next>
+                          <block type="device_clear_display"></block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>
