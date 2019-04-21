@@ -530,15 +530,16 @@ namespace loraBit {
                         tmp = pins.i2cReadBuffer(I2C_ADDR, 1, false)
                     } while ((tmp.length == 0) && (loraStatusPause == 0))
                 } while (loraStatusPause > 0)
-
+                /*
                 if (tmp.length != 0)
-                    if (s != tmp[0]) {
-                        //console.log(tmp[0].toString())
-                    }
-
+                    if (s != tmp[0])
+                        if (tmp[0] != 0) console.log(tmp[0].toString())
+                */
                 s = tmp[0]
 
             } while ((s == loraBit_Event.RESET) || ((s & loraBit_Event.TXRXPEND) != 0))
+
+            //if (s != loraStatus) console.log(s.toString())
 
             if (joinState != loraJoin_State.JOINED) { // RESET) || NOT_JOINED) || JOIN_FAIL
                 if ((s & loraBit_Event.JOINED) != 0) {
@@ -547,7 +548,6 @@ namespace loraBit {
                     console.log("EV_JOINED")
                 }
                 else
-                    //console.log(txto.toString())
                     if (txto <= 0) {
                         if (joinState == loraJoin_State.NOT_JOINED)
                             txto = TX_TIMEOUT * 5
@@ -557,60 +557,59 @@ namespace loraBit {
                         console.log(">REJOIN")
                     }
             }
-            else if (loraStatus != s) {
-                if (joinState == loraJoin_State.JOINED) {
-                    if ((s & loraBit_Event.JOINED) == 0) {
-                        if ((s & loraBit_Event.JOIN_FAIL) == 0) {
-                            joinState = loraJoin_State.NOT_JOINED
-                            txto = TX_TIMEOUT * 5
-                            console.log(">NOT_JOINED")
-                            console.log(">WAIT JOIN")
-                        } else {
-                            joinState = loraJoin_State.JOIN_FAIL
-                            txto = TX_TIMEOUT * 10
-                            console.log("EV_JOIN_FAILED")
-                            console.log(">WAIT REJOIN")
-                        }
-                        txrxpend = true
+            else {
+                if ((s & loraBit_Event.JOINED) == 0) {
+                    if ((s & loraBit_Event.JOIN_FAIL) == 0) {
+                        joinState = loraJoin_State.NOT_JOINED
+                        txto = TX_TIMEOUT * 5
+                        console.log(">NOT_JOINED")
+                        console.log(">WAIT JOIN")
+                    } else {
+                        joinState = loraJoin_State.JOIN_FAIL
+                        txto = TX_TIMEOUT * 10
+                        console.log("EV_JOIN_FAILED")
+                        console.log(">WAIT REJOIN")
                     }
-                    else if (txrxpend) {
-                        if ((s & loraBit_Event.TX_COMPLETE) != 0) {
-                            console.log("EV_TXCOMPLETE")
-                            if (rxWindows) {
-                                let len: number = 0
-                                do {
-                                    basic.pause(200)
-                                    tmp = pins.createBuffer(1)
-                                    tmp[0] = loraBit_Cmd.GET
-                                    pins.i2cWriteBuffer(I2C_ADDR, tmp, false)
-                                    tmp = pins.i2cReadBuffer(I2C_ADDR, 1, true)
-                                } while (tmp.length == 0)
+                    txrxpend = true
+                }
+                else if (txrxpend) {
+                    if ((s & loraBit_Event.TX_COMPLETE) != 0) {
+                        s = s - loraBit_Event.TX_COMPLETE
+                        console.log("EV_TXCOMPLETE")
+                        if (rxWindows) {
+                            let len: number = 0
+                            do {
+                                basic.pause(200)
+                                tmp = pins.createBuffer(1)
+                                tmp[0] = loraBit_Cmd.GET
+                                pins.i2cWriteBuffer(I2C_ADDR, tmp, false)
+                                tmp = pins.i2cReadBuffer(I2C_ADDR, 1, true)
+                            } while (tmp.length == 0)
 
-                                len = tmp[0]
+                            len = tmp[0]
 
-                                if (len > 0) {
-                                    tmp = pins.i2cReadBuffer(I2C_ADDR, len + 1, false)
+                            if (len > 0) {
+                                tmp = pins.i2cReadBuffer(I2C_ADDR, len + 1, false)
 
-                                    if (tmp.length > 2) {
-                                        ReceivedPort = tmp[1]
-                                        ReceivedPayload = ''
-                                        len = tmp.length - 2
-                                        if (len > RX_PAYLOAD_MAX_LEN)
-                                            len = RX_PAYLOAD_MAX_LEN
-                                        for (let i = 0; i < len; i++)
-                                            ReceivedPayload = ReceivedPayload + byteToHexString(tmp[i + 2])
+                                if (tmp.length > 2) {
+                                    ReceivedPort = tmp[1]
+                                    ReceivedPayload = ''
+                                    len = tmp.length - 2
+                                    if (len > RX_PAYLOAD_MAX_LEN)
+                                        len = RX_PAYLOAD_MAX_LEN
+                                    for (let i = 0; i < len; i++)
+                                        ReceivedPayload = ReceivedPayload + byteToHexString(tmp[i + 2])
 
-                                        control.raiseEvent(LORA_EVENT_ID, 1)
-                                        console.log("EV_RXCOMPLETE")
-                                    }
+                                    control.raiseEvent(LORA_EVENT_ID, 1)
+                                    console.log("EV_RXCOMPLETE")
                                 }
                             }
-                            txrxpend = false
                         }
+                        txrxpend = false
                     }
                 }
-                loraStatus = s
             }
+            loraStatus = s
         }
     })
 
@@ -667,17 +666,20 @@ namespace loraBit {
     //%
     function do_reset(): boolean {
         let s = 0
-        let timeout: number
+        let t1: number
+        let t0 = 5
+
         do {
             console.log(">RESET")
             writeByte(I2C_ADDR, loraBit_Cmd.RESET, 0)
 
-            timeout = 100   //20sec (200ms unit)
+            t1 = 20   //5sec (200ms unit)
             do {
                 s = getStatus()
-                timeout--
-            } while ((s != loraBit_Event.INITED) && ((timeout % 10) != 0))
-        } while ((s != loraBit_Event.INITED) && (timeout > 0))
+                t1--
+            } while ((s != loraBit_Event.INITED) && (t1 > 0))
+            t0--
+        } while ((s != loraBit_Event.INITED) && (t0 > 0))
 
         if (s == loraBit_Event.INITED) {
             console.log("EV_RESET")
@@ -699,7 +701,7 @@ namespace loraBit {
         if (do_reset())
             joinState = loraJoin_State.RESET
 
-        rejoin = true
+        //rejoin = true
         txrxpend = false
     }
 
@@ -768,8 +770,9 @@ namespace loraBit {
     function do_join(): void {
         let s: number
         let tmp: Buffer
+        let timeout: number
 
-        if (joinState == loraJoin_State.JOINED)
+        if (joinState != loraJoin_State.RESET)
             if (do_reset()) joinState = loraJoin_State.RESET
 
         if (joinState == loraJoin_State.RESET) {
@@ -814,7 +817,7 @@ namespace loraBit {
 
             resume()
 
-            let timeout: number = 3000     //10min (200ms unit)
+            timeout = 3000     //10min (200ms unit)
             do {
                 s = getStatus()
                 timeout--
@@ -889,7 +892,10 @@ namespace loraBit {
     //% port.defl=1
     export function sendPacket(confirmed: loraBit_Confirmed, port: number, payload: string): void {
         let tmp: Buffer
-
+        /*
+        console.log("join state=")
+        console.log(joinState.toString())
+        */
         if (txrxpend) {
             console.log(">Send packet: TXRX_PENDING")
         }
